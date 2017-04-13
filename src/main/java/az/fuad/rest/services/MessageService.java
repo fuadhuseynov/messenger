@@ -1,6 +1,7 @@
 package az.fuad.rest.services;
 
 import az.fuad.rest.database.DatabaseClass;
+import az.fuad.rest.exceptions.DataNotFoundException;
 import az.fuad.rest.models.Message;
 
 import java.util.ArrayList;
@@ -40,7 +41,10 @@ public class MessageService {
     }
 
     public Message getMessage(long id) {
-        return messages.get(id);
+        Message message = messages.get(id);
+        if (message == null)
+            throw new DataNotFoundException("Message with id " + id + " not found!");
+        return message;
     }
 
     public Message addMessage(Message message) {

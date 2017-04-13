@@ -1,6 +1,7 @@
 package az.fuad.rest.services;
 
 import az.fuad.rest.database.DatabaseClass;
+import az.fuad.rest.exceptions.DataNotFoundException;
 import az.fuad.rest.models.Profile;
 
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ public class ProfileService {
     }
 
     public Profile getProfile(String profileName) {
+        if (profiles.get(profileName) == null)
+            throw new DataNotFoundException("Profile with profile name " + profileName + " does not exist!");
         return profiles.get(profileName);
     }
 

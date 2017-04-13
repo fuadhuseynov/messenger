@@ -1,6 +1,7 @@
 package az.fuad.rest.services;
 
 import az.fuad.rest.database.DatabaseClass;
+import az.fuad.rest.exceptions.DataNotFoundException;
 import az.fuad.rest.models.Comment;
 import az.fuad.rest.models.Message;
 
@@ -19,6 +20,8 @@ public class CommentService {
 
     public Comment getComment(long messageId, long commentId) {
         Map<Long, Comment> comments = messages.get(messageId).getComments();
+        if (comments.get(commentId) == null)
+            throw new DataNotFoundException("Comment with id " + commentId + " does not exist!");
         return comments.get(commentId);
     }
 
