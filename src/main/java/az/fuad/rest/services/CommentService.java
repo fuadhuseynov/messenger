@@ -3,8 +3,12 @@ package az.fuad.rest.services;
 import az.fuad.rest.database.DatabaseClass;
 import az.fuad.rest.exceptions.DataNotFoundException;
 import az.fuad.rest.models.Comment;
+import az.fuad.rest.models.ErrorMessage;
 import az.fuad.rest.models.Message;
 
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,10 +23,14 @@ public class CommentService {
     }
 
     public Comment getComment(long messageId, long commentId) {
+        Message message = messages.get(messageId);
+        if (message == null)
+            throw new DataNotFoundException("Message with id " + messageId + " does not exist.");
         Map<Long, Comment> comments = messages.get(messageId).getComments();
-        if (comments.get(commentId) == null)
-            throw new DataNotFoundException("Comment with id " + commentId + " does not exist!");
-        return comments.get(commentId);
+        Comment comment = comments.get(commentId);
+        if (comment == null)
+            throw new DataNotFoundException("Comment with id " + commentId + " does not exist.");
+        return comment;
     }
 
     public Comment addComment(long messageId, Comment comment) {
