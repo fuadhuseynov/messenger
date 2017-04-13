@@ -4,7 +4,11 @@ import az.fuad.rest.models.Comment;
 import az.fuad.rest.services.CommentService;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.List;
 
 //The path is: "/messages/{messageId}/comments"
@@ -26,8 +30,13 @@ public class CommentResource {
     }
 
     @POST
-    public Comment addComment(@PathParam("messageId") long messageId, Comment comment) {
-        return commentService.addComment(messageId, comment);
+    public Response addComment(@PathParam("messageId") long messageId, Comment comment, @Context UriInfo uriInfo) {
+        Comment addedComment = commentService.addComment(messageId, comment);
+        String addedId = String.valueOf(addedComment.getId());
+        URI uri = uriInfo.getAbsolutePathBuilder().path(addedId).build();
+        return Response.created(uri)
+                .entity(addedComment)
+                .build();
     }
 
     @PUT

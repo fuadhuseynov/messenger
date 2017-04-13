@@ -4,7 +4,11 @@ import az.fuad.rest.models.Profile;
 import az.fuad.rest.services.ProfileService;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.List;
 
 @Path("/profiles")
@@ -26,8 +30,13 @@ public class ProfileResource {
     }
 
     @POST
-    public Profile addProfile(Profile profile) {
-        return profileService.addProfile(profile);
+    public Response addProfile(Profile profile, @Context UriInfo uriInfo) {
+        Profile addedProfile = profileService.addProfile(profile);
+        String addedId = String.valueOf(addedProfile.getId());
+        URI uri = uriInfo.getAbsolutePathBuilder().path(addedId).build();
+        return Response.created(uri)
+                .entity(addedProfile)
+                .build();
     }
 
     @PUT
