@@ -36,11 +36,15 @@ public class ProfileService {
     public Profile updateProfile(Profile profile) {
         if (profile.getProfileName().isEmpty())
             return null;
+        if (profiles.get(profile.getProfileName()) == null)
+            throw new DataNotFoundException("Profile with profile name " + profile.getProfileName() + " does not exist.");
         profiles.put(profile.getProfileName(), profile);
         return profile;
     }
 
     public Profile deleteProfile(String profileName) {
+        if (profiles.get(profileName) == null)
+            throw new DataNotFoundException("Profile with profile name " + profileName + " does not exist.");
         return profiles.remove(profileName);
     }
 

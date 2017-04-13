@@ -30,6 +30,8 @@ public class MessageService {
             if (calendar.get(Calendar.YEAR) == year)
                 messagesForYear.add(message);
         }
+        if (messagesForYear.isEmpty())
+            throw new DataNotFoundException("No messages found for year " + year);
         return messagesForYear;
     }
 
@@ -37,6 +39,8 @@ public class MessageService {
         ArrayList<Message> list = new ArrayList<Message>(messages.values());
         if (start + size > list.size())
             return new ArrayList<Message>();
+        if (list.subList(start, start + size).isEmpty())
+            throw new DataNotFoundException("No messages found.");
         return list.subList(start, start + size);
     }
 
@@ -56,11 +60,15 @@ public class MessageService {
     public Message updateMessage(Message message) {
         if (message.getId() <= 0)
             return null;
+        if (messages.get(message.getId()) == null)
+            throw new DataNotFoundException("Message with id " + message.getId() + " does not exist.");
         messages.put(message.getId(), message);
         return message;
     }
 
     public Message deleteMessage(long id) {
+        if (messages.get(id) == null)
+            throw new DataNotFoundException("Message with id " + id + " does not exist.");
         return messages.remove(id);
     }
 
